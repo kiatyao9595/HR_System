@@ -1,0 +1,95 @@
+@{
+    Database db = Database.Open("HR_System");
+    var employeeName = Request.Form["employee_name"];
+    var employeeID = Request.Form["employee_id"];
+    var sql = "SELECT * FROM tbl_employeeInfo WHERE 1=1 ";
+
+    if(!String.IsNullOrEmpty(employeeName)){
+        sql += "AND employeeName LIKE '%"+employeeName+"%' ";
+    }
+    if(!String.IsNullOrEmpty(employeeID)){
+        sql += "AND ID LIKE '%"+employeeID+"%' ";
+    }
+
+    var result = db.Query(sql);
+}
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title></title>
+        @RenderPage("../css.cshtml")
+    </head>
+    <style>
+    .table-bordered>thead>tr>th {
+        text-align: center;
+        padding: 5px 5px;
+        vertical-align: middle;
+    }
+    .table-bordered>tbody>tr>td {
+        text-align: center;
+    }
+</style>
+    <body>
+
+<div id="wrapper">
+    <div class="row">
+                <div class="col-sm-12">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">Employee List</div>
+                        <div class="panel-body">
+                                            <div class="dataTable_wrappper">
+                                                <div class="row">
+                                        <div class="col-sm-12">
+
+                                                <table class="table table-striped table-bordered table-hover table_font" id="employee_table">
+                                                    <thead>
+                                                       <tr>
+											                                      <th colspan="2">Action</th>
+                                                            <th>Employee ID</th>
+                                                            <th>Employee Name</th>
+                                                            <th>Created Date</th>
+										                </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @{
+
+                                                            foreach(var r in result) {
+                                                                <tr>
+                                                                    <td><button class="btn btn-primary" onclick="parent.location.href='Employee_Details_View.cshtml?employeeID=@r.id'" target="_parent">View</button></td>
+                                                                    <td><button class="btn btn-success" onclick="parent.location.href='Employee_Details.cshtml?employeeID=@r.id&form_type=EDIT'">Edit</button></td>
+                                                                    <td>@r.ID</td>
+                                                                    <td>@r.employeeName</td>
+                                                                    <td>@r.created_date</td>
+                                                                </tr>
+                                                            }
+                                                        }
+                                                    </tbody>
+                                                </table>
+
+                                        </div>
+                                    </div>
+                              </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+        @RenderPage("../js.cshtml")
+    </body>
+    </html>
+
+
+<script>
+
+    $(document).ready(function() {
+      $('#employee_table').dataTable({
+          responsive: true
+      });
+    });
+
+
+</script>

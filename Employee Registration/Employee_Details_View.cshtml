@@ -1,0 +1,222 @@
+@{
+  var employeeID = Request.QueryString["employeeID"];
+  Database db = Database.Open("HR_System");
+	var sql = "SELECT * FROM tbl_employeeRole";
+	var rolesResult = db.Query(sql);
+  dynamic employeeResult = null;
+
+	var employeeName = "";
+  var employeeUsername = "";
+	var employeeContactNo = "";
+	var employee_id_no = "";
+	var employeeAddress1 = "";
+	var employeeAddress2 = "";
+	var employeeAddress3 = "";
+	var employeeAddress4 = "";
+	var employeeRole = "";
+	var employeeEntitledLeave = "";
+
+  if(!String.IsNullOrEmpty(employeeID)){
+    sql = "SELECT TOP 1 * FROM tbl_EmployeeInfo WHERE ID = @0";
+    employeeResult = db.QuerySingle(sql,employeeID);
+
+    employeeName = employeeResult.employeeName;
+    employeeUsername = employeeResult.username;
+    employeeContactNo = employeeResult.contact_no;
+    employee_id_no = employeeResult.id_no;
+    employeeAddress1 = employeeResult.address_1;
+    employeeAddress2 = employeeResult.address_2;
+    employeeAddress3 = employeeResult.address_3;
+    employeeAddress4 = employeeResult.address_4;
+    employeeRole = employeeResult.role;
+    employeeEntitledLeave = employeeResult.no_of_leave.ToString();
+    }
+}
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title></title>
+        @RenderPage("../css.cshtml")
+    </head>
+    <body>
+	<form action="Employee_Registration_Save.cshtml" id="Employee_Register_Save" method="post" name="Employee_Register_Save" target="">
+		<div id="wrapper">
+			<div id="page-wrapper" style="background-color:#fff; margin: 0px 0px 0px 0px">
+				<div class="row">
+					<div class="col-sm-12">
+						<h1 class="page-header">Employee's Details</h1>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-12">
+						<div class="panel panel-primary">
+							<div class="panel-heading">
+								View Employee Details
+							</div>
+							<div class="panel-body">
+								<div class="row">
+										<div class="row">
+											<div class="col-sm-6">
+													<div class="col-sm-4">
+														<div class="form-group">
+															Employee's Name
+														</div>
+													</div>
+													<div class="col-sm-6">
+														<div class="form-group">
+															<input class="form-control" id="employee_name" disabled="disable" name="employee_name" type="text" value="@employeeName">
+														</div>
+													</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-6">
+													<div class="col-sm-4">
+														<div class="form-group">
+															Employee's Username
+														</div>
+													</div>
+													<div class="col-sm-6">
+														<div class="form-group">
+															<input class="form-control" id="employee_username" disabled="disable" name="employee_username" type="text" value="@employeeUsername">
+														</div>
+													</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-6">
+													<div class="col-sm-4">
+														<div class="form-group">
+															Employee's Contact Number
+														</div>
+													</div>
+													<div class="col-sm-6">
+														<div class="form-group">
+															<input class="form-control" id="employee_contact_no" disabled="disable" name="employee_contact_no" type="text" value="@employeeContactNo">
+														</div>
+													</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-6">
+													<div class="col-sm-4">
+														<div class="form-group">
+															Employee's IC / Passport
+														</div>
+													</div>
+													<div class="col-sm-6">
+														<div class="form-group">
+															<input class="form-control" id="employee_id_no" disabled="disable" name="employee_id_no" type="text" value="@employee_id_no">
+														</div>
+													</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-6">
+													<div class="col-sm-4">
+														<div class="form-group">
+															Employee's Address 1
+														</div>
+													</div>
+													<div class="col-sm-6">
+														<div class="form-group">
+															<input class="form-control" id="employee_address_1" disabled="disable" name="employee_address_1" maxlength="35" placeholder="Only 35 Characters" type="text" value="@employeeAddress1">
+														</div>
+													</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-6">
+													<div class="col-sm-4">
+														<div class="form-group">
+															Employee's Address 2
+														</div>
+													</div>
+													<div class="col-sm-6">
+														<div class="form-group">
+															<input class="form-control" id="employee_address_2" disabled="disable" name="employee_address_2" maxlength="35" placeholder="Only 35 Characters" type="text" value="@employeeAddress2">
+														</div>
+													</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-6">
+													<div class="col-sm-4">
+														<div class="form-group">
+															Employee's Address 3
+														</div>
+													</div>
+													<div class="col-sm-6">
+														<div class="form-group">
+															<input class="form-control" id="employee_address_3" disabled="disable" name="employee_address_3" maxlength="35" placeholder="Only 35 Characters" type="text" value="@employeeAddress3">
+														</div>
+													</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-6">
+													<div class="col-sm-4">
+														<div class="form-group">
+															Employee's Address 4
+														</div>
+													</div>
+													<div class="col-sm-6">
+														<div class="form-group">
+															<input class="form-control" id="employee_address_4" disabled="disable" name="employee_address_4" maxlength="35" placeholder="Only 35 Characters" type="text" value="@employeeAddress4">
+														</div>
+													</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-6">
+													<div class="col-sm-4">
+														<div class="form-group">
+															Employee's Role
+														</div>
+													</div>
+													<div class="col-sm-6">
+														<div class="form-group">
+															<select class="form-control" id="employee_role" disabled="disable" name="employee_role" value="@employeeRole">
+                                @{
+  															foreach(var r in rolesResult){
+  																<option value=@r.Role>@r.Role</option>
+  																}
+  														     }
+															</select>
+														</div>
+													</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-6">
+													<div class="col-sm-4">
+														<div class="form-group">
+															Employee's Entitled Leave
+														</div>
+													</div>
+													<div class="col-sm-6">
+														<div class="form-group">
+															<input class="form-control" id="employee_entitled_leave" disabled="disable" name="employee_entitled_leave" type="number" placeholder="Only Numbers are allowed" type="text" value="@employeeEntitledLeave">
+														</div>
+													</div>
+											</div>
+										</div>
+								</div>
+								<div class="row" style="text-align: center">
+									<div class="col-sm-12">
+												<button class="btn btn-success" onclick="location.href='Employee_Search.cshtml'" type="button">Back</button>
+									 </div>
+								 </div>
+							 </div>
+						 </div>
+					 </div>
+				 </div>
+				 <div class="row">
+					  <div class="col-sm-12"></div>
+				 </div>
+			 </div>
+		 </div>
+	  </form>
+	@RenderPage("../js.cshtml")
+  </body>
+</html>

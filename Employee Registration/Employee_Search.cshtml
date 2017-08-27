@@ -1,0 +1,80 @@
+<html>
+    <head>
+        <meta>
+        <title></title>
+        @RenderPage("../css.cshtml")
+    </head>
+    <body>
+        <form id="Employee_Search_List" name="Employee_Search_List" method="post" action="Employee_Search_List.cshtml" target="Employee_Search_List_Frame">
+            <div id="wrapper">
+                <div id="page-wrapper" style="background-color:#fff; margin: 0px 0px 0px 0px">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <h1 class="page-header">Employee List</h1>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">Employee Search</div>
+                                <div class="panel-body">
+                                    <div class="row" style="text-align: center">
+                                        <div class="col-sm-12">
+                                            <div class="row">
+                                                <div class="col-sm-2">
+                                                    <div class="form-group">Employee Name</div>
+                                                </div>
+                                                <div class="col-sm-3">
+                                                    <div class="form-group">
+                                                        <input type="text" class="form-control" id="employee_name" name="employee_name">
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-1">
+                                                  <!--Dummy spacing-->
+                                                </div>
+                                                <div class="col-sm-2">
+                                                    <div class="form-group">Employee ID</div>
+                                                </div>
+                                                <div class="col-sm-3">
+                                                    <div class="form-group">
+                                                        <input type="text" class="form-control" id="employee_id" name="employee_id">
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-1">
+                                                  <!--Dummy spacing-->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row" style="text-align: center">
+                                        <div class="col-sm-12">
+                                            <div class="col-sm-4"></div>
+                                            <div class="col-sm-2">
+                                                <button type="submit" class="btn btn-primary">Search</button>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <button type="button" class="btn btn-success" onclick="location.href = 'Employee_Details.cshtml?form_type=NEW'">Add New Employee</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <iframe name="Employee_Search_List_Frame" id="Employee_Search_List_Frame" src="Employee_Search_List.cshtml" frameborder="0" scrolling="no" onload='resizeIframe(this);' width="100%"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        @RenderPage("../js.cshtml")
+    </body>
+</html>
+
+<script type="text/javascript">
+
+</script>

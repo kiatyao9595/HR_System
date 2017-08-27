@@ -1,0 +1,25 @@
+input[type="checkbox"].custome_checkbox_FDRF1{
+  margin: 0px;
+}
+
+input[type="checkbox"].custome_checkbox_FDRF2{
+  margin: 5px 0 0;
+}
+
+.custom_span2{
+  margin-left: 5px;
+}
+
+.custom_seal_box{
+  text-align: center; 
+  width: 20%; 
+  height: 20px;
+}
+
+.form-horizontal .control-label-fd_confirm {
+  float: left;
+  width: 160px;
+  padding-top: 5px;
+  text-align: left;
+}
+
