@@ -1,10 +1,12 @@
 @{
+	RenderPage("../HeaderFile.cshtml");
 	var employeeID = Request.QueryString["employeeID"];
 	var type = Request.QueryString["form_type"];
 	Database db = Database.Open("HR_System");
 	var sql = "SELECT * FROM tbl_employeeRole";
 	var rolesResult = db.Query(sql);
 	dynamic employeeResult = null;
+
 
 	var employeeName = "";
 	var employeeContactNo = "";
@@ -15,6 +17,7 @@
 	var employeeAddress4 = "";
 	var employeeRole = "";
 	var employeeEntitledLeave = "";
+	var status = "";
 
 	if(type == "EDIT"){
 	if(!String.IsNullOrEmpty(employeeID)){
@@ -30,6 +33,7 @@
 		employeeAddress4 = employeeResult.address_4;
 		employeeRole = employeeResult.role;
 		employeeEntitledLeave = employeeResult.no_of_leave.ToString();
+		status = employeeResult.status;
 		}
 	}
 }
@@ -69,7 +73,7 @@
 													</div>
 													<div class="col-sm-6">
 														<div class="form-group">
-															<input class="form-control" id="employee_name" name="employee_name" type="text" value="@employeeName">
+															<input class="form-control" id="employee_name" name="employee_name" type="text" value="@employeeName" required>
 														</div>
 													</div>
 											</div>
@@ -85,7 +89,7 @@
 													</div>
 													<div class="col-sm-6">
 														<div class="form-group">
-															<input class="form-control" id="employee_username" name="employee_username" type="text">
+															<input class="form-control" id="employee_username" name="employee_username" type="text" required>
 														</div>
 													</div>
 											</div>
@@ -99,7 +103,7 @@
 													</div>
 													<div class="col-sm-6">
 														<div class="form-group">
-															<input class="form-control" id="employee_password" name="employee_password" type="password">
+															<input class="form-control" id="employee_password" name="employee_password" type="password" required>
 														</div>
 													</div>
 											</div>
@@ -115,7 +119,7 @@
 													</div>
 													<div class="col-sm-6">
 														<div class="form-group">
-															<input class="form-control" id="employee_contact_no" name="employee_contact_no" type="text" value = "@employeeContactNo">
+															<input class="form-control" id="employee_contact_no" name="employee_contact_no" type="text" value = "@employeeContactNo" required>
 														</div>
 													</div>
 											</div>
@@ -129,7 +133,7 @@
 													</div>
 													<div class="col-sm-6">
 														<div class="form-group">
-															<input class="form-control" id="employee_id_no" name="employee_id_no" type="text" value = "@employee_id_no">
+															<input class="form-control" id="employee_id_no" name="employee_id_no" type="text" value = "@employee_id_no" required>
 														</div>
 													</div>
 											</div>
@@ -199,7 +203,7 @@
 													</div>
 													<div class="col-sm-6">
 														<div class="form-group">
-															<select class="form-control" id="employee_role" name="employee_role" value = "@employeeRole">
+															<select class="form-control" id="employee_role" name="employee_role" value = "@employeeRole" required>
 															@{
 															foreach(var r in rolesResult){
 																<option value=@r.Role>@r.Role</option>
@@ -219,7 +223,7 @@
 													</div>
 													<div class="col-sm-6">
 														<div class="form-group">
-															<input class="form-control" id="employee_entitled_leave" name="employee_entitled_leave" type="number" placeholder="Only Numbers are allowed" type="text" value = "@employeeEntitledLeave">
+															<input class="form-control" id="employee_entitled_leave" name="employee_entitled_leave" type="number" placeholder="Only Numbers are allowed" type="text" value = "@employeeEntitledLeave" required>
 														</div>
 													</div>
 											</div>
@@ -227,16 +231,26 @@
 								</div>
 								<div class="row" style="text-align: center">
 									<div class="col-sm-12">
-										<div class="col-sm-4"></div>
-										<div class="col-sm-2">
+										<div class="col-sm-3"></div>
 											@{
 												if(type == "NEW"){
-											<button class="btn btn-primary" type="button" id="submit_button" name = "submit_button">Save New Record</button>
+											<button class="btn btn-primary" type="submit" id="submit_button" name = "submit_button">Save New Record</button>
 										}else if(type == "EDIT"){
-											<button class="btn btn-primary" type="button" id="submit_button" name = "submit_button" >Update New Record</button>
-										}
-										}
+											<div class="col-sm-2">
+											<button class="btn btn-primary" type="submit" id="submit_button" name = "submit_button" >Update New Record</button>
 										</div>
+										 <div class = "col-sm-2">
+											 @{
+												 if(status == "Active"){
+		 											<button class="btn btn-danger" type="submit" id="inactive_button" name = "inactive_button" >Deactivate User</button>
+		 										}else{
+		 											<button class="btn btn-success" type="submit" id="active_button" name = "active_button" >Active User</button>
+		 										}
+											 }
+										</div>
+
+										}
+										}
 										<div class="col-sm-2">
 											<button class="btn btn-success" onclick="location.href='Employee_Search.cshtml'" type="button">Back</button>
 										</div>
@@ -251,14 +265,18 @@
 				</div>
 			</div>
 		</div>
-	</form>@RenderPage("../js.cshtml")
+	</form>
+	@RenderPage("../js.cshtml")
 </body>
 </html>
 
 <script type="text/javascript">
-var isEmpty = false;
-$('#submit_button').click(function(){
+	$( "#inactive_button" ).click(function() {
+		document.getElementById('form_type').value = "DEACTIVATE";
 		document.getElementById('Employee_Register_Save').submit();
 });
-
+$( "#active_button" ).click(function() {
+	document.getElementById('form_type').value = "ACTIVATE";
+	document.getElementById('Employee_Register_Save').submit();
+});
 </script>

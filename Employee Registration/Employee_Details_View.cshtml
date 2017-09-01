@@ -1,4 +1,5 @@
 @{
+	RenderPage("../HeaderFile.cshtml");
   var employeeID = Request.QueryString["employeeID"];
   Database db = Database.Open("HR_System");
 	var sql = "SELECT * FROM tbl_employeeRole";

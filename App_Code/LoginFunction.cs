@@ -15,11 +15,12 @@ using System.Security.Cryptography;
 /// </summary>
 public class LoginFunction
 {
-
+	public String sql = "";
+	Database db = Database.Open("HR_System");
 
 	public string MD5Hash(string input)
 	{
-	 input = String.IsNullOrEmpty(input)?"":input;
+	 input = String.IsNullOrEmpty(input)?"":input.ToString();
    StringBuilder hash = new StringBuilder();
    MD5CryptoServiceProvider md5provider = new MD5CryptoServiceProvider();
    byte[] bytes = md5provider.ComputeHash(new UTF8Encoding().GetBytes(input));
@@ -30,6 +31,72 @@ public class LoginFunction
    }
    return hash.ToString();
 	}
+
+	public bool checkUsername(String username){
+	  bool userExist = false;
+		sql = "SELECT COUNT(*) FROM tbl_employeeInfo WHERE username = @0";
+		var result = db.QueryValue(sql,username);
+		if(result > 0){
+			userExist = true;
+		}
+		return userExist;
+	}
+
+	public bool checkPassword(String username,String password){
+		bool validPassword = false;
+		sql = "SELECT COUNT(*) FROM tbl_employeeInfo WHERE password = @0 AND username = @1";
+		var result = db.QueryValue(sql, MD5Hash(password), username);
+		if(result > 0){
+			validPassword = true;
+		}
+		return validPassword;
+	}
+
+	public bool checkUserStatus(String username, String password){
+		bool userActive = false;
+		sql = "SELECT TOP 1 status FROM tbl_employeeInfo WHERE password = @0 AND username = @1";
+		var result = db.QueryValue(sql, MD5Hash(password), username);
+		if(result == "Active" ){
+			userActive = true;
+		}
+		return userActive;
+	}
+
+	public bool checkUserRetryCount(String username){
+		bool noExceedCount = false;
+		sql = "SELECT TOP 1 retry_count FROM tbl_employeeInfo WHERE username = @0";
+		int result = db.QueryValue(sql, username);
+		if(result <= 2 ){
+			noExceedCount = true;
+		}
+		return noExceedCount;
+	}
+
+
+	public void increaseRetryCount(String username){
+		sql = "SELECT TOP 1 retry_count FROM tbl_employeeInfo WHERE username = @0";
+		int retry_count = db.QueryValue(sql,username);
+		retry_count++;
+
+		sql = "UPDATE tbl_employeeInfo SET retry_count = @0 WHERE username = @1";
+		db.Execute(sql,retry_count,username);
+
+		if(retry_count >= 3){
+			sql = "UPDATE tbl_employeeInfo SET status = 'Inactive' WHERE username = @0";
+			db.Execute(sql,username);
+		}
+
+	}
+
+	public void ResetRetryCount(int id){
+			sql = "UPDATE tbl_employeeInfo SET retry_count = 0, status = 'Active' WHERE ID = @0";
+			db.Execute(sql,id);
+	}
+	public void ResetRetryCount(String username){
+			sql = "UPDATE tbl_employeeInfo SET retry_count = 0, status = 'Active' WHERE username = @0";
+			db.Execute(sql,username);
+	}
+
 
 
 }

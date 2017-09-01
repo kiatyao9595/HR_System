@@ -1,4 +1,5 @@
 @{
+	RenderPage("../HeaderFile.cshtml");
     Database db = Database.Open("HR_System");
     var employeeName = Request.Form["employee_name"];
     var employeeID = Request.Form["employee_id"];
@@ -52,6 +53,7 @@
                                                             <th>Employee ID</th>
                                                             <th>Employee Name</th>
                                                             <th>Created Date</th>
+                                                            <th>Status</th>
 										                </tr>
                                                     </thead>
                                                     <tbody>
@@ -64,6 +66,7 @@
                                                                     <td>@r.ID</td>
                                                                     <td>@r.employeeName</td>
                                                                     <td>@r.created_date</td>
+                                                                    <td>@r.status</td>
                                                                 </tr>
                                                             }
                                                         }

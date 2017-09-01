@@ -1,4 +1,5 @@
 @{
+	RenderPage("../HeaderFile.cshtml");
 	Database db = Database.Open("HR_System");
 	LoginFunction lf = new LoginFunction();
 	var type = Request.Form["form_type"];
@@ -25,12 +26,22 @@
 	if(result <= 0){
 	try{
 	if(type == "NEW"){
-	sql = "INSERT INTO tbl_EmployeeInfo(employeeName,created_date,no_of_leave,username,password,role,contact_no,id_no,address_1,address_2,address_3,address_4,updated_by,updated_date) VALUES (@0,@1,@2,@3,@4,@5,@6,@7,@8,@9,@10,@11,@12,@13)";	db.Execute(sql,employeeName,currentTimestamp,employeeEntitledLeave,employeeUsername,employeePassword,employeeRole,employeeContactNo,employee_id_no,employeeAddress1,employeeAddress2,employeeAddress3,employeeAddress4,"System",currentTimestamp);
+	sql = "INSERT INTO tbl_EmployeeInfo(employeeName,created_date,no_of_leave,username,password,role,contact_no,id_no,address_1,address_2,address_3,address_4,updated_by,updated_date,status) VALUES (@0,@1,@2,@3,@4,@5,@6,@7,@8,@9,@10,@11,@12,@13,@14)";	db.Execute(sql,employeeName,currentTimestamp,employeeEntitledLeave,employeeUsername,employeePassword,employeeRole,employeeContactNo,employee_id_no,employeeAddress1,employeeAddress2,employeeAddress3,employeeAddress4,"System",currentTimestamp,"Active");
 	Response.Write(String.Format("<script>alert('Successfully {0} registered') </script>",employeeName));
 	Response.Write(String.Format("<script>window.location.assign('Employee_Search.cshtml')</script>"));
 	}else if(type == "EDIT"){
 		sql = "UPDATE  tbl_EmployeeInfo SET employeeName=@0 , created_date=@1 ,no_of_leave=@2,role=@3,contact_no=@4 ,id_no=@5 ,address_1=@6 ,address_2=@7,address_3=@8 ,address_4=@9,updated_by=@10,updated_date=@11 WHERE ID = @12";	db.Execute(sql,employeeName,currentTimestamp,employeeEntitledLeave,employeeRole,employeeContactNo,employee_id_no,employeeAddress1,employeeAddress2,employeeAddress3,employeeAddress4,"System",currentTimestamp,employeeID);
 		Response.Write(String.Format("<script>alert('Successfully {0} updated') </script>",employeeName));
+		Response.Write(String.Format("<script>window.location.assign('Employee_Search.cshtml')</script>"));
+	}else if(type == "DEACTIVATE"){
+		sql = "UPDATE  tbl_EmployeeInfo SET status = @0, updated_date = @1 WHERE ID = @2";
+		db.Execute(sql,"Inactive",currentTimestamp,employeeID);
+		Response.Write(String.Format("<script>alert('Successfully Deactivated {0}') </script>",employeeName));
+		Response.Write(String.Format("<script>window.location.assign('Employee_Search.cshtml')</script>"));
+	}else if(type == "ACTIVATE"){
+		sql = "UPDATE  tbl_EmployeeInfo SET status = @0, updated_date = @1 WHERE ID = @2";
+		db.Execute(sql,"Active",currentTimestamp,employeeID);
+		Response.Write(String.Format("<script>alert('Successfully Activated {0}') </script>",employeeName));
 		Response.Write(String.Format("<script>window.location.assign('Employee_Search.cshtml')</script>"));
 	}
 	}
@@ -40,7 +51,13 @@
 	Response.Write("<script>window.location.assign('Employee_Details.cshtml?form_type=NEW')</script>");
 	}else if(type == "EDIT"){
 	Response.Write(String.Format("<script>alert('Failed to update {0}')</script>",employeeName));
-	Response.Write("<script>window.location.assign('Employee_Details.cshtml?form_type=EDIT&employeeID="+employeeID+")</script>");
+	Response.Write("<script>window.location.assign('Employee_Details.cshtml?form_type=EDIT&employeeID="+employeeID+"')</script>");
+	}else if(type == "DEACTIVATE"){
+	Response.Write(String.Format("<script>alert('Failed to deactivate {0}')</script>",employeeName));
+	Response.Write("<script>window.location.assign('Employee_Details.cshtml?form_type=EDIT&employeeID="+employeeID+"')</script>");
+	}else if(type == "ACTIVATE"){
+	Response.Write(String.Format("<script>alert('Failed to activate {0}')</script>",employeeName));
+	Response.Write("<script>window.location.assign('Employee_Details.cshtml?form_type=EDIT&employeeID="+employeeID+"')</script>");
 	}
 	Response.Write("<script>window.location.assign('Employee_Details.cshtml')</script>");
 	}

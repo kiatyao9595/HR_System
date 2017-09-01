@@ -1,3 +1,7 @@
+@{
+  var invalid_message = "";
+  invalid_message = Request.QueryString["invalid_message"];
+}
 <html lang="en">
     <head>
         <meta charset="utf-8" />
@@ -7,15 +11,27 @@
     <body>
 		<div id="wrapper">
 			<div id="page-wrapper" style="background-color:#fff; margin: 0px 0px 0px 0px">
-        <form class="form-signin">
-        <h2 class="form-signin-heading">Company Name</h2>
+        <form class="form-signin" id = "user_login" name = "user_login"  method="post" action = "Login_Validation.cshtml">
+        <h2 class="form-signin-heading">Company Name</h2> <br>
+        @{
+          if(invalid_message == "invalid_username"){
+            <p style="color:red;">Username does not exist!</p>
+          }else if(invalid_message == "mismatch_un_pw"){
+            <p style="color:red;">Invalid Username or Password!</p>
+          }else if(invalid_message == "exceed_retry"){
+              <p style="color:red;">Account has been locked! Please Contact System Administrator! </p>
+          }
+          else if(invalid_message == "inactive_user"){
+            <p style="color:red;">User is not activated! Please Contact System Administrator!</p>
+          }
+        }
         <div class="form-group">
           <label for="inputEmail" class="sr-only">Username</label>
-          <input type="text" id="inputEmail" class="form-control" placeholder="Username" required autofocus>
+          <input type="text" id="inputUsername" name = "inputUsername" class="form-control" placeholder="Username" required autofocus>
         </div>
         <div class="form-group">
         <label for="inputPassword" class="sr-only">Password</label>
-        <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+        <input type="password" id="inputPassword" name = "inputPassword" class="form-control" placeholder="Password" required>
       </div>
 
          <!--

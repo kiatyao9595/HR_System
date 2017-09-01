@@ -1,0 +1,22 @@
+@{
+  var username = Request.Form["inputUsername"];
+  var password = Request.Form["inputPassword"];
+  LoginFunction lf = new LoginFunction();
+
+  if(!lf.checkUsername(username)){ // Check Validity of username
+    Response.Write("<script>window.location.assign('Default.cshtml?invalid_message=invalid_username')</script>");
+  }else if(!lf.checkUserRetryCount(username)){ // Check user retry count
+    Response.Write("<script>window.location.assign('Default.cshtml?invalid_message=exceed_retry')</script>");
+  }else if(!lf.checkPassword(username,password)){ // Check username and password match or not
+    lf.increaseRetryCount(username);
+    Response.Write("<script>window.location.assign('Default.cshtml?invalid_message=mismatch_un_pw')</script>");
+  }
+  else if(!lf.checkUserStatus(username,password)){ // Check user active or not
+    Response.Write("<script>window.location.assign('Default.cshtml?invalid_message=inactive_user')</script>");
+  }else{
+    Session["username"] = username;
+    Response.Write("<script>window.location.assign('/Employee Registration/Employee_Search.cshtml')</script>");
+    lf.ResetRetryCount(username);
+  }
+
+}

@@ -1,0 +1,8 @@
+@{
+  var session_username = Session["username"];
+  session_username = session_username == null?"":session_username;
+
+  if(session_username == ""){
+    Response.Write("<script>window.location.assign('../Default.cshtml')</script>");
+  }
+}
