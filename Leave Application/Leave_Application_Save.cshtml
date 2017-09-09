@@ -1,0 +1,32 @@
+@{
+  @RenderPage("../HeaderFile.cshtml");
+  var currentTimeStamp = DateTime.Now;
+  var leave_from = Request.Form["leave_date_from"];
+  var leave_to = Request.Form["leave_date_to"];
+  var no_days_applied = Request.Form["leave_apply"];
+  var type_of_leave = Request.Form["type_of_leave"];
+  var reason = Request.Form["reason"];
+  var username_session =  Session["username"];
+
+  string submitted_by =username_session == null?"":username_session.ToString();
+
+  var sql = "";
+  Database db = Database.Open("HR_System");
+
+  LeaveFuction leavefunc = new LeaveFuction();
+
+  if(leavefunc.sufficientLeave(submitted_by,Convert.ToInt32(no_days_applied))){
+    Response.Write(String.Format("<script>alert('Insufficient leave to request leave from {0} to {1}. Please reapply leave with valid values! ') </script>",leave_from,leave_to));
+    Response.Write(String.Format("<script>window.location.assign('Leave_Application_Details.cshtml')</script>"));
+  }else if(leavefunc.pendingApprovalLeave(submitted_by)){
+    Response.Write(String.Format("<script>alert('Unable to apply leave, you still have leave pending for approval!') </script>"));
+    Response.Write(String.Format("<script>window.location.assign('Leave_Application_Details.cshtml')</script>"));
+  }
+  else{
+    sql = "INSERT INTO tbl_LeaveApplication(leave_applied_from,leave_applied_to,no_days_applied,status,type_of_leave,reason,submitted_by,submitted_date) VALUES (@0,@1,@2,@3,@4,@5,@6,@7)";	db.Execute(sql,leave_from,leave_to,no_days_applied,"Pending Approval",type_of_leave,reason,submitted_by,currentTimeStamp);
+    Response.Write(String.Format("<script>alert('Successfully request leave from {0} to {1}, Awaiting for Administrator\\'s Approval!') </script>",leave_from,leave_to));
+    Response.Write(String.Format("<script>window.location.assign('Leave_Application_Details.cshtml')</script>"));
+  }
+
+
+}

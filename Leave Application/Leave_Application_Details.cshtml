@@ -1,0 +1,175 @@
+@{
+  @RenderPage("../HeaderFile.cshtml");
+   Database db = Database.Open("HR_System");
+   var type_of_leave = db.Query("SELECT * FROM tbl_leaveType");
+
+}
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title></title>
+        @RenderPage("../css.cshtml")
+    </head>
+    <body>
+	<form action="Leave_Application_Save.cshtml" id="Leave_Application_Save" method="post" name="Leave_Application_Save" target="">
+		<div id="wrapper">
+			<div id="page-wrapper" style="background-color:#fff; margin: 0px 0px 0px 0px">
+				<div class="row">
+					<div class="col-sm-12">
+						<h1 class="page-header">Leave Application</h1>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-12">
+						<div class="panel panel-primary">
+							<div class="panel-heading">
+								Apply Leave
+							</div>
+							<div class="panel-body">
+								<div class="row">
+										<div class="row">
+											<div class="col-sm-6">
+													<div class="col-sm-4">
+														<div class="form-group">
+															Date From
+														</div>
+													</div>
+													<div class="col-sm-6">
+														<div class="form-group input-group">
+                              <input type="text" id="leave_date_from" name="leave_date_from" class="form-control" value="" readonly="">
+                              <span class="input-group-btn">
+                                <button class="btn btn-default" id="btn_date_from" name="btn_date_from" type="button"><i class="fa fa-calendar"></i></button>
+                              </span>
+														</div>
+													</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-6">
+													<div class="col-sm-4">
+														<div class="form-group">
+															Date To
+														</div>
+													</div>
+                          <div class="col-sm-6">
+                            <div class="form-group input-group">
+                              <input type="text" id="leave_date_to" name="leave_date_to" class="form-control" value="" readonly="" onChange="calcLeaveApplied()">
+                              <span class="input-group-btn">
+                                <button class="btn btn-default" id="btn_date_to" name="btn_date_to" type="button"><i class="fa fa-calendar"></i></button>
+                              </span>
+                            </div>
+                          </div>
+											</div>
+										</div>
+                    <div class="row">
+                      <div class="col-sm-6">
+                          <div class="col-sm-4">
+                            <div class="form-group">
+                              Days of Leave Applied
+                            </div>
+                          </div>
+                          <div class="col-sm-6">
+                            	<div class="form-group">
+                              <input type="text" id="leave_apply" name="leave_apply" class="form-control" value="" readonly="">
+                            </div>
+                          </div>
+                      </div>
+                    </div>
+										<div class="row">
+											<div class="col-sm-6">
+													<div class="col-sm-4">
+														<div class="form-group">
+															Reason
+														</div>
+													</div>
+													<div class="col-sm-6">
+														<div class="form-group">
+															 <textarea class="form-control" rows="3" id="reason" name = "reason" maxlength="200"></textarea>
+														</div>
+													</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-6">
+													<div class="col-sm-4">
+														<div class="form-group">
+															Type Of Leave
+														</div>
+													</div>
+                          <div class="col-sm-6">
+														<div class="form-group">
+															<select class="form-control" id="type_of_leave" name="type_of_leave">
+                                @{
+                                  foreach(var r in type_of_leave){
+                                    <option value="@r.leave_type">@r.leave_type</option>
+                                  }
+                                }
+															</select>
+														</div>
+													</div>
+                        </div>
+                      </div>
+                    </div>
+                                <div class="row" style="text-align: center">
+                									<div class="col-sm-12">
+                										<div class="col-sm-4"></div>
+                										<div class="col-sm-2">
+                											<button class="btn btn-primary" type="submit" id="submit_button" name = "submit_button">Apply</button>
+                										</div>
+                										<div class="col-sm-2">
+                											<button class="btn btn-success" onclick="" type="button">Back</button>
+                										</div>
+                									</div>
+                								</div>
+                                @RenderPage("../js.cshtml")
+                              </body>
+</html>
+<script>
+var date = new Date();
+var today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+
+  $(document).ready(function () {
+
+    $("#leave_date_from").datepicker({
+        "dateFormat": "yy-mm-dd",
+        changeMonth: true,
+        changeYear: true,
+        numberOfMonths: 1,
+        minDate:  today, // Min to apply leave must start from today
+        onClose: function (selectedDate) {
+            $("#leave_date_to").datepicker("option", "minDate", selectedDate);
+        }
+        });
+      $("#leave_date_to").datepicker({
+          "dateFormat": "yy-mm-dd",
+          changeMonth: true,
+          changeYear: true,
+          numberOfMonths: 1
+        });
+
+    });
+
+    $("#btn_date_from").click(function () {
+      $("#leave_date_from").focus();
+    });
+
+    $("#btn_date_to").click(function () {
+      $("#leave_date_to").focus();
+    });
+
+    function calcLeaveApplied(){
+     var day_leave_applied = daydiff(parseDate($('#leave_date_from').val()), parseDate($('#leave_date_to').val()));
+     document.getElementById("leave_apply").value = day_leave_applied + 1; // Because if same day = 1 entire day of leave
+    }
+
+    function parseDate(str) { // Took from other source https://stackoverflow.com/questions/542938/how-do-i-get-the-number-of-days-between-two-dates-in-javascript
+    var mdy = str.split('-');
+    return new Date(mdy[1], mdy[0]-1,mdy[2]);
+    }
+
+    function daydiff(first, second) {
+    return Math.round((second-first)/(1000*60*60*24));
+    }
+
+
+</script>

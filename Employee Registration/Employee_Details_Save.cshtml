@@ -15,8 +15,9 @@
 	var employeeAddress4 = Request.Form["employee_address_4"];
 	var employeeRole = Request.Form["employee_role"];
 	var employeeEntitledLeave = Request.Form["employee_entitled_leave"];
+	var old_employeeEntitledLeave = Request.Form["employee_old_entitled_leave"];
+	var employeeNoOfLeaveLeft = Request.Form["employee_no_leave_left"];
 	var currentTimestamp = DateTime.Now;
-
 
 	employeePassword = lf.MD5Hash(employeePassword);
 
@@ -26,25 +27,27 @@
 	if(result <= 0){
 	try{
 	if(type == "NEW"){
-	sql = "INSERT INTO tbl_EmployeeInfo(employeeName,created_date,no_of_leave,username,password,role,contact_no,id_no,address_1,address_2,address_3,address_4,updated_by,updated_date,status) VALUES (@0,@1,@2,@3,@4,@5,@6,@7,@8,@9,@10,@11,@12,@13,@14)";	db.Execute(sql,employeeName,currentTimestamp,employeeEntitledLeave,employeeUsername,employeePassword,employeeRole,employeeContactNo,employee_id_no,employeeAddress1,employeeAddress2,employeeAddress3,employeeAddress4,"System",currentTimestamp,"Active");
+	sql = "INSERT INTO tbl_EmployeeInfo(employeeName,created_date,no_of_leave,username,password,role,contact_no,id_no,address_1,address_2,address_3,address_4,updated_by,updated_date,status,no_of_leave_left) VALUES (@0,@1,@2,@3,@4,@5,@6,@7,@8,@9,@10,@11,@12,@13,@14,@15)";	db.Execute(sql,employeeName,currentTimestamp,employeeEntitledLeave,employeeUsername,employeePassword,employeeRole,employeeContactNo,employee_id_no,employeeAddress1,employeeAddress2,employeeAddress3,employeeAddress4,Session["username"],currentTimestamp,"Active",employeeEntitledLeave);
 	Response.Write(String.Format("<script>alert('Successfully {0} registered') </script>",employeeName));
 	Response.Write(String.Format("<script>window.location.assign('Employee_Search.cshtml')</script>"));
 	}else if(type == "EDIT"){
-		sql = "UPDATE  tbl_EmployeeInfo SET employeeName=@0 , created_date=@1 ,no_of_leave=@2,role=@3,contact_no=@4 ,id_no=@5 ,address_1=@6 ,address_2=@7,address_3=@8 ,address_4=@9,updated_by=@10,updated_date=@11 WHERE ID = @12";	db.Execute(sql,employeeName,currentTimestamp,employeeEntitledLeave,employeeRole,employeeContactNo,employee_id_no,employeeAddress1,employeeAddress2,employeeAddress3,employeeAddress4,"System",currentTimestamp,employeeID);
+		int newNoOfLeaveLeft = (Convert.ToInt32(employeeEntitledLeave) - Convert.ToInt32(old_employeeEntitledLeave)) + Convert.ToInt32(employeeNoOfLeaveLeft);
+		sql = "UPDATE  tbl_EmployeeInfo SET employeeName=@0 , created_date=@1 ,no_of_leave=@2,role=@3,contact_no=@4 ,id_no=@5 ,address_1=@6 ,address_2=@7,address_3=@8 ,address_4=@9,updated_by=@10,updated_date=@11, no_of_leave_left = @13 WHERE ID = @12";	db.Execute(sql,employeeName,currentTimestamp,employeeEntitledLeave,employeeRole,employeeContactNo,employee_id_no,employeeAddress1,employeeAddress2,employeeAddress3,employeeAddress4,Session["username"],currentTimestamp,employeeID,newNoOfLeaveLeft);
 		Response.Write(String.Format("<script>alert('Successfully {0} updated') </script>",employeeName));
 		Response.Write(String.Format("<script>window.location.assign('Employee_Search.cshtml')</script>"));
 	}else if(type == "DEACTIVATE"){
-		sql = "UPDATE  tbl_EmployeeInfo SET status = @0, updated_date = @1 WHERE ID = @2";
-		db.Execute(sql,"Inactive",currentTimestamp,employeeID);
+		sql = "UPDATE  tbl_EmployeeInfo SET status = @0, updated_date = @1, updated_by =@3 WHERE ID = @2";
+		db.Execute(sql,"Inactive",currentTimestamp,employeeID,Session["username"]);
 		Response.Write(String.Format("<script>alert('Successfully Deactivated {0}') </script>",employeeName));
 		Response.Write(String.Format("<script>window.location.assign('Employee_Search.cshtml')</script>"));
 	}else if(type == "ACTIVATE"){
-		sql = "UPDATE  tbl_EmployeeInfo SET status = @0, updated_date = @1 WHERE ID = @2";
-		db.Execute(sql,"Active",currentTimestamp,employeeID);
+		sql = "UPDATE  tbl_EmployeeInfo SET status = @0, updated_date = @1 ,  updated_by =@3 WHERE ID = @2";
+		db.Execute(sql,"Active",currentTimestamp,employeeID,Session["username"]);
+		lf.ResetRetryCount(Convert.ToInt32(employeeID));
 		Response.Write(String.Format("<script>alert('Successfully Activated {0}') </script>",employeeName));
 		Response.Write(String.Format("<script>window.location.assign('Employee_Search.cshtml')</script>"));
 	}
-	}
+}
 	catch(Exception e){
 	if(type == "NEW"){
 	Response.Write(String.Format("<script>alert('Failed to register {0}')</script>",employeeName));

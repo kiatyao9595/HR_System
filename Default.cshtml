@@ -1,6 +1,10 @@
 @{
   var invalid_message = "";
   invalid_message = Request.QueryString["invalid_message"];
+
+  Database db = Database.Open("HR_System");
+  var company_logo = db.QueryValue("SELECT value FROM tbl_system_parameters WHERE name = 'company_logo'");
+  var company_name = db.QueryValue("SELECT value FROM tbl_system_parameters WHERE name = 'company_name'");
 }
 <html lang="en">
     <head>
@@ -12,7 +16,14 @@
 		<div id="wrapper">
 			<div id="page-wrapper" style="background-color:#fff; margin: 0px 0px 0px 0px">
         <form class="form-signin" id = "user_login" name = "user_login"  method="post" action = "Login_Validation.cshtml">
-        <h2 class="form-signin-heading">Company Name</h2> <br>
+        <div class="row">
+        <div class = "col-sm-3">
+        <img src="data:image/jpeg;base64,@company_logo" alt="Company Logo" width="70" height="70"/>
+      </div>
+      <div class = "col-sm-9">
+        <h2 class="form-signin-heading" style = "padding:10px 0px 0px 0px">@company_name</h2>
+      </div>
+      </div><br>
         @{
           if(invalid_message == "invalid_username"){
             <p style="color:red;">Username does not exist!</p>

@@ -1,0 +1,99 @@
+@{
+	  RenderPage("../HeaderFile.cshtml");
+    Database db = Database.Open("HR_System");
+    var employeeName = Request.Form["employee_name"];
+    var leave_status = Request.Form["leave_approval_status"];
+    var sql = "SELECT * FROM tbl_leaveApplication WHERE 1=1 ";
+
+    if(!String.IsNullOrEmpty(employeeName)){
+        sql += "AND employeeName LIKE '%"+employeeName+"%' ";
+    }
+    if(!String.IsNullOrEmpty(leave_status) && leave_status != "All" ){
+        sql += "AND status LIKE '%"+leave_status+"%' ";
+    }
+
+    var result = db.Query(sql);
+}
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title></title>
+        @RenderPage("../css.cshtml")
+    </head>
+    <style>
+    .table-bordered>thead>tr>th {
+        text-align: center;
+        padding: 5px 5px;
+        vertical-align: middle;
+    }
+    .table-bordered>tbody>tr>td {
+        text-align: center;
+    }
+</style>
+    <body>
+
+<div id="wrapper">
+    <div class="row">
+                <div class="col-sm-12">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">Leave Application List</div>
+                        <div class="panel-body">
+                                            <div class="dataTable_wrappper">
+                                                <div class="row">
+                                        <div class="col-sm-12">
+
+                                                <table class="table table-striped table-bordered table-hover table_font" id="leave_table">
+                                                    <thead>
+                                                       <tr>
+											                                      <th>Action</th>
+                                                            <th>Employee ID</th>
+                                                            <th>Employee Name</th>
+                                                            <th>Leave Applied From</th>
+                                                            <th>Leave Applied To</th>
+																														<th>Status</th>
+										                									</tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @{
+
+                                                            foreach(var r in result) {
+                                                                <tr>
+                                                                    <td><button class="btn btn-primary" onclick="parent.location.href='Leave_Application_Details_View.cshtml?ID=@r.id'" target="_parent">View</button></td>
+                                                                    <td>@r.ID</td>
+                                                                    <td>@r.submitted_by</td>
+                                                                    <td>@r.leave_applied_from</td>
+																																		<td>@r.leave_applied_to</td>
+                                                                    <td>@r.status</td>
+                                                                </tr>
+                                                            }
+                                                        }
+                                                    </tbody>
+                                                </table>
+
+                                        </div>
+                                    </div>
+                              </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+        @RenderPage("../js.cshtml")
+    </body>
+    </html>
+
+
+<script>
+
+    $(document).ready(function() {
+      $('#employee_table').dataTable({
+          responsive: true
+      });
+    });
+
+
+</script>

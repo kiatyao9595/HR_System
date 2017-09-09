@@ -15,7 +15,8 @@
     Response.Write("<script>window.location.assign('Default.cshtml?invalid_message=inactive_user')</script>");
   }else{
     Session["username"] = username;
-    Response.Write("<script>window.location.assign('/Employee Registration/Employee_Search.cshtml')</script>");
+    Response.Write("<script>window.location.assign('/Leave Application/Leave_Application_Search.cshtml')</script>");
+    //Response.Write("<script>window.location.assign('/Employee Registration/Employee_Search.cshtml')</script>");
     lf.ResetRetryCount(username);
   }
 

@@ -16,7 +16,9 @@
 	var employeeAddress3 = "";
 	var employeeAddress4 = "";
 	var employeeRole = "";
-	var employeeEntitledLeave = "";
+	var employeeEntitledLeave = 0;
+	var old_employeeEntitledLeave = 0;
+	var employeeNoOfLeaveLeft = 0;
 	var status = "";
 
 	if(type == "EDIT"){
@@ -31,8 +33,10 @@
 		employeeAddress2 = employeeResult.address_2;
 		employeeAddress3 = employeeResult.address_3;
 		employeeAddress4 = employeeResult.address_4;
+		employeeNoOfLeaveLeft = employeeResult.no_of_leave_left;
+		employeeEntitledLeave = employeeResult.no_of_leave;;
+		old_employeeEntitledLeave = employeeResult.no_of_leave;
 		employeeRole = employeeResult.role;
-		employeeEntitledLeave = employeeResult.no_of_leave.ToString();
 		status = employeeResult.status;
 		}
 	}
@@ -48,6 +52,8 @@
 	<form action="Employee_Details_Save.cshtml" id="Employee_Register_Save" method="post" name="Employee_Register_Save" target="">
 		<!--Just to pass value to save file-->
 		<input class="form-control" id="employee_id" name="employee_id" type="hidden" value="@employeeID">
+		<input class="form-control" id="employee_no_leave_left" name="employee_no_leave_left" type="hidden" value="@employeeNoOfLeaveLeft">
+		<input class="form-control" id="employee_old_entitled_leave" name="employee_old_entitled_leave" type="hidden" value="@old_employeeEntitledLeave">
 		<input class="form-control" id="form_type" name="form_type" type="hidden" value="@type">
 		<div id="wrapper">
 			<div id="page-wrapper" style="background-color:#fff; margin: 0px 0px 0px 0px">
