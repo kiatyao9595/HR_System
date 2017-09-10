@@ -6,7 +6,11 @@
   var no_days_applied = Request.Form["leave_apply"];
   var type_of_leave = Request.Form["type_of_leave"];
   var reason = Request.Form["reason"];
+  var type = Request.Form["form_type"];
   var username_session =  Session["username"];
+  var id = Request.Form["id"];
+  var approval_reason = Request.Form["approval_reason"];
+
 
   string submitted_by =username_session == null?"":username_session.ToString();
 
@@ -14,7 +18,7 @@
   Database db = Database.Open("HR_System");
 
   LeaveFuction leavefunc = new LeaveFuction();
-
+  if(type == "NEW"){
   if(leavefunc.sufficientLeave(submitted_by,Convert.ToInt32(no_days_applied))){
     Response.Write(String.Format("<script>alert('Insufficient leave to request leave from {0} to {1}. Please reapply leave with valid values! ') </script>",leave_from,leave_to));
     Response.Write(String.Format("<script>window.location.assign('Leave_Application_Details.cshtml')</script>"));
@@ -23,10 +27,23 @@
     Response.Write(String.Format("<script>window.location.assign('Leave_Application_Details.cshtml')</script>"));
   }
   else{
-    sql = "INSERT INTO tbl_LeaveApplication(leave_applied_from,leave_applied_to,no_days_applied,status,type_of_leave,reason,submitted_by,submitted_date) VALUES (@0,@1,@2,@3,@4,@5,@6,@7)";	db.Execute(sql,leave_from,leave_to,no_days_applied,"Pending Approval",type_of_leave,reason,submitted_by,currentTimeStamp);
+    sql = "INSERT INTO tbl_LeaveApplication(leave_applied_from,leave_applied_to,no_days_applied,status,type_of_leave,reason,submitted_by,submitted_date,username_submitted) VALUES (@0,@1,@2,@3,@4,@5,@6,@7,@8)";	db.Execute(sql,leave_from,leave_to,no_days_applied,"Pending Approval",type_of_leave,reason,LoginFunction.getNamebyUsername(submitted_by),currentTimeStamp,submitted_by);
     Response.Write(String.Format("<script>alert('Successfully request leave from {0} to {1}, Awaiting for Administrator\\'s Approval!') </script>",leave_from,leave_to));
     Response.Write(String.Format("<script>window.location.assign('Leave_Application_Details.cshtml')</script>"));
   }
+  }else if (type == "APPROVE"){
+    sql = "UPDATE tbl_LeaveApplication SET status = @0, approved_by = @1, approval_date = @2, approval_reason = @3 WHERE ID = @4";
+    db.Execute(sql,"Approve",username_session,currentTimeStamp,approval_reason,id);
+    leavefunc.reduceLeave(Convert.ToInt32(id),Convert.ToInt32(no_days_applied));
+    Response.Write(String.Format("<script>alert('Successfully Approved Leave!')</script>"));
+    Response.Write(String.Format("<script>window.location.assign('Leave_Application_Search.cshtml')</script>"));
+  }else if (type == "REJECT"){
+    sql = "UPDATE tbl_LeaveApplication SET status = @0, approved_by = @1, approval_date = @2, approval_reason = @3 WHERE ID = @4";
+    db.Execute(sql,"Reject",username_session,currentTimeStamp,approval_reason,id);
+    Response.Write(String.Format("<script>alert('Successfully Rejected Leave!')</script>"));
+    Response.Write(String.Format("<script>window.location.assign('Leave_Application_Search.cshtml')</script>"));
+  }
+
 
 
 }

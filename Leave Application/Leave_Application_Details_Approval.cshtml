@@ -1,0 +1,184 @@
+@{
+   @RenderPage("../HeaderFile.cshtml");
+   //var ID = Request.QueryString["ID"];
+   //var type = Request.QueryString["form_type"];
+   var ID = "11"; // Testing purposes
+   var type = "Approval";
+   Database db = Database.Open("HR_System");
+   var type_of_leave = db.Query("SELECT * FROM tbl_leaveType");
+   var result = db.QuerySingle("SELECT TOP 1 * FROM tbl_leaveApplication WHERE ID = @0", ID);
+
+   var leave_applied_from =result.leave_applied_from;
+   var leave_applied_to =result.leave_applied_to;
+   var no_days_applied =result.no_days_applied;
+  // var type_of_leave =result.type_of_leave;
+   var reason =result.reason;
+}
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title></title>
+        @RenderPage("../css.cshtml")
+    </head>
+    <body>
+	<form action="Leave_Application_Save.cshtml" id="Leave_Application_Save" method="post" name="Leave_Application_Save" target="">
+    <input class="form-control" id="form_type" name="form_type" type="hidden" value="">
+    <input class="form-control" id="id" name="id" type="hidden" value="@ID">
+    <input class = "form-control" id="approval_reason" name = "approval_reason" type="hidden" value ="">
+		<div id="wrapper">
+			<div id="page-wrapper" style="background-color:#fff; margin: 0px 0px 0px 0px">
+				<div class="row">
+					<div class="col-sm-12">
+						<h1 class="page-header">Leave Application</h1>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-12">
+						<div class="panel panel-primary">
+							<div class="panel-heading">
+								Apply Leave
+							</div>
+							<div class="panel-body">
+								<div class="row">
+										<div class="row">
+											<div class="col-sm-6">
+													<div class="col-sm-4">
+														<div class="form-group">
+															Date From
+														</div>
+													</div>
+													<div class="col-sm-6">
+														<div class="form-group">
+                              <input type="text" id="leave_date_from" name="leave_date_from" class="form-control" readonly="" value = "@result.leave_applied_from">
+														</div>
+													</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-6">
+													<div class="col-sm-4">
+														<div class="form-group">
+															Date To
+														</div>
+													</div>
+                          <div class="col-sm-6">
+                            <div class="form-group">
+                              <input type="text" id="leave_date_to" name="leave_date_to" class="form-control" readonly="" value = "@result.leave_applied_to" >
+                            </div>
+                          </div>
+											</div>
+										</div>
+                    <div class="row">
+                      <div class="col-sm-6">
+                          <div class="col-sm-4">
+                            <div class="form-group">
+                              Days of Leave Applied
+                            </div>
+                          </div>
+                          <div class="col-sm-6">
+                            	<div class="form-group">
+                              <input type="text" id="leave_apply" name="leave_apply" class="form-control"  readonly="" value = "@result.no_days_applied">
+                            </div>
+                          </div>
+                      </div>
+                    </div>
+										<div class="row">
+											<div class="col-sm-6">
+													<div class="col-sm-4">
+														<div class="form-group">
+															Reason
+														</div>
+													</div>
+													<div class="col-sm-6">
+														<div class="form-group">
+															 <textarea class="form-control" rows="3" id="reason" name = "reason" readonly="" maxlength="200" >@result.reason</textarea>
+														</div>
+													</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-6">
+													<div class="col-sm-4">
+														<div class="form-group">
+															Type Of Leave
+														</div>
+													</div>
+                          <div class="col-sm-6">
+														<div class="form-group">
+															<select class="form-control" id="type_of_leave" name="type_of_leave" readonly="" value = "@result.type_of_leave">
+                                @{
+                                  foreach(var r in type_of_leave){
+                                    <option value="@r.leave_type">@r.leave_type</option>
+                                  }
+                                }
+															</select>
+														</div>
+													</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row" style="text-align: center">
+                      <div class="col-sm-12">
+                        <div class="col-sm-3"></div>
+                          @{
+                      if(type == "Approval"){
+                        <div class="col-sm-2">
+                        <button class="btn btn-primary" type="button" id="approve_submit_button" name = "approve_submit_button" >Approve</button>
+                      </div>
+                        <div class="col-sm-2">
+                        <button class="btn btn-danger" type="button" id="reject_submit_button" name = "reject_submit_button" >Reject</button>
+                      </div>
+                        }
+                        }
+                        <div class="col-sm-2">
+                          <button class="btn btn-success" onclick="location.href='Leave_Application_Search.cshtml'" type="button">Back</button>
+                        </div>
+                      </div>
+                    </div>
+                    </div>
+                    <div class="modal fade" id="reject-modal" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content" id="modal-content1">
+                                <div class="modal-header">
+                                    <h4 class="modal-title" id="">Reject Leave Application?</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <h5>Are you sure you want to reject leave applied?</h5>
+                                    <br/>
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <div class="form-group">Reject Remarks</div>
+                                        </div>
+                                        <div class="col-sm-7">
+                                          <div class="form-group">
+                                              <textarea class="form-control" rows="7" id="reject_remarks" name="reject_remarks" style="scrollHei"></textarea>
+                                          </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="RejectForm_submit()">Submit</button>
+                                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </body>
+                                @RenderPage("../js.cshtml")
+                  </html>
+        <script>
+          $( "#approve_submit_button" ).click(function() {
+	           document.getElementById('form_type').value = "APPROVE";
+	           document.getElementById('Leave_Application_Save').submit();
+          });
+          $( "#reject_submit_button" ).click(function() {
+             document.getElementById('form_type').value = "REJECT";
+            $('#reject-modal').modal('show');
+          });
+
+          function RejectForm_submit(){
+            document.getElementById('approval_reason').value = document.getElementById('reject_remarks').value;
+            document.getElementById('Leave_Application_Save').submit();
+          }
+      </script>

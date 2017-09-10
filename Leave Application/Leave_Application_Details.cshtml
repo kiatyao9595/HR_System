@@ -12,6 +12,7 @@
     </head>
     <body>
 	<form action="Leave_Application_Save.cshtml" id="Leave_Application_Save" method="post" name="Leave_Application_Save" target="">
+  <input class="form-control" id="form_type" name="form_type" type="hidden" value="NEW">
 		<div id="wrapper">
 			<div id="page-wrapper" style="background-color:#fff; margin: 0px 0px 0px 0px">
 				<div class="row">
@@ -117,7 +118,7 @@
                 											<button class="btn btn-primary" type="submit" id="submit_button" name = "submit_button">Apply</button>
                 										</div>
                 										<div class="col-sm-2">
-                											<button class="btn btn-success" onclick="" type="button">Back</button>
+                											<button class="btn btn-success" onclick="location.href ='Leave_Application_Search.cshtml'" type="button">Back</button>
                 										</div>
                 									</div>
                 								</div>

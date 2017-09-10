@@ -31,11 +31,19 @@ public class LeaveFuction
   public bool pendingApprovalLeave(string username){
     bool hasPendingLeave = false;
     var sql = "SELECT COUNT(*) FROM tbl_leaveApplication WHERE submitted_by = @0 AND status = 'Pending Approval' ";
-    var pendingApprovalLeave = db.QueryValue(sql,username);
+    var pendingApprovalLeave = db.QueryValue(sql,LoginFunction.getNamebyUsername(username));
     if(pendingApprovalLeave > 0){
        hasPendingLeave = true;
     }
     return hasPendingLeave;
+  }
+
+  public void reduceLeave(int id,int no_days_applied){
+    var sql = "SELECT TOP 1 a.no_of_leave_left AS no_of_leave_left, a.username AS username FROM tbl_employeeInfo a INNER JOIN tbl_leaveApplication b on a.username = b.username_submitted WHERE b.ID = @0";
+    var result = db.QuerySingle(sql,id);
+    sql = "UPDATE tbl_employeeInfo SET no_of_leave_left = @0 WHERE username=@1";
+    db.Execute(sql,(result.no_of_leave_left - no_days_applied),result.username);
+
   }
 
 

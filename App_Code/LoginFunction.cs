@@ -97,6 +97,13 @@ public class LoginFunction
 			db.Execute(sql,username);
 	}
 
+	public static String getNamebyUsername(String username){
+		 var sql = "SELECT TOP 1 employeeName FROM tbl_employeeInfo WHERE username = @0";
+		 Database db = Database.Open("HR_System");
+		 String result = db.QueryValue(sql,username);
+		 return result;
+	}
+
 
 
 }

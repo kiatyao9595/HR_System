@@ -6,7 +6,7 @@
     var sql = "SELECT * FROM tbl_leaveApplication WHERE 1=1 ";
 
     if(!String.IsNullOrEmpty(employeeName)){
-        sql += "AND employeeName LIKE '%"+employeeName+"%' ";
+        sql += "AND submitted_by LIKE '%"+employeeName+"%' ";
     }
     if(!String.IsNullOrEmpty(leave_status) && leave_status != "All" ){
         sql += "AND status LIKE '%"+leave_status+"%' ";
@@ -60,15 +60,15 @@
                                                     <tbody>
                                                         @{
 
-                                                            foreach(var r in result) {
-                                                                <tr>
-                                                                    <td><button class="btn btn-primary" onclick="parent.location.href='Leave_Application_Details_View.cshtml?ID=@r.id'" target="_parent">View</button></td>
-                                                                    <td>@r.ID</td>
-                                                                    <td>@r.submitted_by</td>
-                                                                    <td>@r.leave_applied_from</td>
-																																		<td>@r.leave_applied_to</td>
-                                                                    <td>@r.status</td>
-                                                                </tr>
+                                                  foreach(var r in result) {
+                                                          <tr>
+                                                              <td><button class="btn btn-primary" onclick="parent.location.href='Leave_Application_Details_Approval.cshtml?ID=@r.id&form_type=VIEW'" target="_parent">View</button></td>
+                                                              <td>@r.ID</td>
+                                                              <td>@r.submitted_by</td>
+                                                              <td>@r.leave_applied_from</td>
+																															<td>@r.leave_applied_to</td>
+                                                              <td>@r.status</td>
+                                                          </tr>
                                                             }
                                                         }
                                                     </tbody>
