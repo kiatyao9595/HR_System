@@ -1,5 +1,12 @@
 @{
 	@RenderPage("../HeaderFile.cshtml");
+	var form_type = Request.QueryString["form_type"];
+	var default_value = "";
+	if(form_type == "APPROVAL"){
+		default_value = "Pending Approval";
+	}else if(form_type == "OWNER"){
+		default_value =  Session["username"].ToString();
+	}
 }<html>
     <head>
         <meta>
@@ -7,8 +14,8 @@
         @RenderPage("../css.cshtml")
     </head>
     <body>
-        <form id="Leave_Application_Search_List" name="Leave_Application_Search_List" method="post" action="Leave_Application_Search_List.cshtml" target="Leave_Application_Search_List_Frame">
-            <div id="wrapper">
+        <form id="Leave_Application_Search_List" name="Leave_Application_Search_List" method="post" action="Leave_Application_Search_List.cshtml?form_type=@form_type&default_username=@default_value" target="Leave_Application_Search_List_Frame">
+						<div id="wrapper">
                 <div id="page-wrapper" style="background-color:#fff; margin: 0px 0px 0px 0px">
                     <div class="row">
                         <div class="col-sm-12">
@@ -29,7 +36,14 @@
                                                 </div>
                                                 <div class="col-sm-3">
                                                     <div class="form-group">
-                                                        <input type="text" class="form-control" id="employee_name" name="employee_name">
+																											@{
+																												if(form_type == "OWNER"){
+																													<input type="text" class="form-control" id="employee_name" name="employee_name" value="@LoginFunction.getNamebyUsername(default_value)"  disabled>
+																												}else{
+																													<input type="text" class="form-control" id="employee_name" name="employee_name">
+																												}
+																											}
+
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-1">
@@ -39,14 +53,22 @@
                                                     <div class="form-group">Approval Status</div>
                                                 </div>
                                                 <div class="col-sm-3">
-                                                    <div class="form-group">
-																											<select class="form-control" id="leave_approval_status" name="leave_approval_status" value = "" required>
-																												<option value="All">All</option>
-																												<option value="Approved">Approved</option>
-																												<option value="Rejected">Rejected</option>
-																												<option value="Pending Approval">Pending Approval</option>
-																											</select>
-                                                    </div>
+																									@{
+																										if(form_type != "APPROVAL"){
+																											<div class="form-group">
+																												<select class="form-control" id="leave_approval_status" name="leave_approval_status" value = "" required>
+																													<option value="All">All</option>
+																													<option value="Approved">Approved</option>
+																													<option value="Rejected">Rejected</option>
+																													<option value="Pending Approval">Pending Approval</option>
+																												</select>
+																											</div>
+																										}else{
+																											<input  class="form-control"  type id="leave_approval_status" name="leave_approval_status" value = "@default_value" disabled>
+																										}
+
+																									}
+
                                                 </div>
                                                 <div class="col-sm-1">
                                                   <!--Dummy spacing-->
@@ -57,13 +79,7 @@
 
                                     <div class="row" style="text-align: center">
                                         <div class="col-sm-12">
-																					  <div class="col-sm-4"></div>
-																						<div class="col-sm-2">
                                                 <button type="submit" class="btn btn-primary">Search</button>
-																						</div>
-																						<div class="col-sm-2">
-																								<button type="button" id = "apply_leave_button" name = "apply_leave_button" class="btn btn-success" onclick="location.href = 'Leave_Application_Details.cshtml'">Apply Leave</button>
-																						</div>
                                         </div>
                                     </div>
                                 </div>
@@ -72,7 +88,7 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-12">
-                            <iframe name="Leave_Application_Search_List_Frame" id="Leave_Application_Search_List_Frame" src="Leave_Application_Search_List.cshtml" frameborder="0" scrolling="no" onload='resizeIframe(this);' width="100%"></iframe>
+                            <iframe name="Leave_Application_Search_List_Frame" id="Leave_Application_Search_List_Frame" src="Leave_Application_Search_List.cshtml?form_type=@form_type" frameborder="0" scrolling="no" onload='resizeIframe(this);' width="100%"></iframe>
                         </div>
                     </div>
                 </div>

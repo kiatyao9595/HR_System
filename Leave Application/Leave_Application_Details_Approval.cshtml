@@ -1,9 +1,9 @@
 @{
    @RenderPage("../HeaderFile.cshtml");
-   //var ID = Request.QueryString["ID"];
-   //var type = Request.QueryString["form_type"];
-   var ID = "11"; // Testing purposes
-   var type = "Approval";
+   var ID = Request.QueryString["ID"];
+   var type = Request.QueryString["form_type"];
+   //var ID = "11"; // Testing purposes
+   //var type = "Approval";
    Database db = Database.Open("HR_System");
    var type_of_leave = db.Query("SELECT * FROM tbl_leaveType");
    var result = db.QuerySingle("SELECT TOP 1 * FROM tbl_leaveApplication WHERE ID = @0", ID);
@@ -119,20 +119,26 @@
                     </div>
                     <div class="row" style="text-align: center">
                       <div class="col-sm-12">
-                        <div class="col-sm-3"></div>
+
                           @{
-                      if(type == "Approval"){
+                      if(type == "APPROVAL"){
+                        <div class="col-sm-3"></div>
                         <div class="col-sm-2">
                         <button class="btn btn-primary" type="button" id="approve_submit_button" name = "approve_submit_button" >Approve</button>
                       </div>
                         <div class="col-sm-2">
                         <button class="btn btn-danger" type="button" id="reject_submit_button" name = "reject_submit_button" >Reject</button>
                       </div>
+                      <div class="col-sm-2">
+                        <button class="btn btn-success" onclick="window.history.back()" type="button">Back</button>
+                      </div>
+                      <div class="col-sm-3"></div>
+                    }else{
+                      <button class="btn btn-success" onclick="window.history.back()" type="button">Back</button>
+                    }
                         }
-                        }
-                        <div class="col-sm-2">
-                          <button class="btn btn-success" onclick="location.href='Leave_Application_Search.cshtml'" type="button">Back</button>
-                        </div>
+
+
                       </div>
                     </div>
                     </div>
