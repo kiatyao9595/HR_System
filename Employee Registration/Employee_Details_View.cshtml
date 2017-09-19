@@ -16,6 +16,7 @@
 	var employeeAddress4 = "";
 	var employeeRole = "";
 	var employeeEntitledLeave = "";
+	var employeeAnnualLeaveBal = "";
 
   if(!String.IsNullOrEmpty(employeeID)){
     sql = "SELECT TOP 1 * FROM tbl_EmployeeInfo WHERE ID = @0";
@@ -31,6 +32,7 @@
     employeeAddress4 = employeeResult.address_4;
     employeeRole = employeeResult.role;
     employeeEntitledLeave = employeeResult.no_of_leave.ToString();
+	employeeAnnualLeaveBal = employeeResult.no_of_leave_left.ToString();
     }
 }
 <html lang="en">
@@ -198,6 +200,20 @@
 													<div class="col-sm-6">
 														<div class="form-group">
 															<input class="form-control" id="employee_entitled_leave" disabled="disable" name="employee_entitled_leave" type="number" placeholder="Only Numbers are allowed" type="text" value="@employeeEntitledLeave">
+														</div>
+													</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-6">
+													<div class="col-sm-4">
+														<div class="form-group">
+															Annual Leave Balance
+														</div>
+													</div>
+													<div class="col-sm-6">
+														<div class="form-group">
+															<input class="form-control" id="employee_annual_leave" disabled="disable" name="employee_annual_leave" type="number" type="text" value="@employeeAnnualLeaveBal">
 														</div>
 													</div>
 											</div>

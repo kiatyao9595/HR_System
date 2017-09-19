@@ -5,8 +5,7 @@
 	<meta content="width=device-width, initial-scale=1" name="viewport">
 	<link href="bootstrap/css/navigation_bar_custom.css" rel="stylesheet">
 	<link href="bootstrap/css/navigation_bar_custom2.css" rel="stylesheet">
-	<link href="bower_components/bootstrap/dist/css/bootstrap2.min.css" rel="stylesheet">
-	<link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+	<link href="bower_components/bootstrap/dist/css/bootstrap-spacelab.css" rel="stylesheet">
 	<link href="bower_components/dist/css/sb-admin-2.css" rel="stylesheet">
 	<link href="bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 	<link href="bower_components/dist/css/jquery-ui.css" rel="stylesheet">
@@ -14,13 +13,21 @@
 <body>
 	<form action="/Employee%20Registration/Employee_Search.cshtml" id="content_form" method="post" name="content_form" target="content_frame">
 		<div class="w3-sidebar w3-bar-block w3-light-grey w3-card-2" style="width:160px;">
-			<a class="w3-bar-item w3-button" href="/Employee%20Registration/Employee_Search.cshtml" target="content_frame">Employee Listing</a> <a class="w3-button w3-block w3-left-align" onclick="myAccFunc()">Leave Application <i class="fa fa-caret-down"></i></a>
+
+			<a class="w3-button w3-block w3-left-align" onclick="myAccFunc()">Employee Listing <i class="fa fa-caret-down"></i></a>
 			<div class="w3-hide w3-white w3-card-2" id="demoAcc">
+				<a class="w3-bar-item w3-button" href="/Employee%20Registration/Employee_Search.cshtml" target="content_frame">Employee Listing</a>
+				<a class="w3-bar-item w3-button" href="/Employee%20Registration/Employee_Details_View.cshtml?employeeID=@LoginFunction.getIdbyUsername(Session["username"].ToString())" target="content_frame">My Profile</a>
+			</div>
+
+			<a class="w3-button w3-block w3-left-align" onclick="myAccFunc2()">Leave Application <i class="fa fa-caret-down"></i></a>
+			<div class="w3-hide w3-white w3-card-2" id="demoAcc2">
 				<a class="w3-bar-item w3-button" href="/Leave%20Application/Leave_Application_Details.cshtml" target="content_frame">Leave Application</a>
         <a class="w3-bar-item w3-button" href="/Leave%20Application/Leave_Application_Search.cshtml?form_type=LISTING" target="content_frame">Leave Application Listing</a>
         <a class="w3-bar-item w3-button" href="/Leave%20Application/Leave_Application_Search.cshtml?form_type=APPROVAL" target="content_frame">Leave Application Approval</a>
         <a class="w3-bar-item w3-button" href="/Leave%20Application/Leave_Application_Search.cshtml?form_type=OWNER" target="content_frame">My Leave Application</a>
-			</div><a class="w3-bar-item w3-button" href="expired.cshtml" onclick="submit_form(this)">Sign Out</a>
+			</div>
+			<a class="w3-bar-item w3-button" href="expired.cshtml">Sign Out</a>
 		</div>
 		<div class="w3-container" style="margin-left:120px;">
 			<div class="col-sm-12" style="margin-top 0px">
@@ -39,6 +46,17 @@
 	       x.previousElementSibling.className =
 	       x.previousElementSibling.className.replace(" w3-green", "");
 	   }
+	}
+	function myAccFunc2() {
+		 var x = document.getElementById("demoAcc2");
+		 if (x.className.indexOf("w3-show") == -1) {
+				 x.className += " w3-show";
+				 x.previousElementSibling.className += " w3-green";
+		 } else {
+				 x.className = x.className.replace(" w3-show", "");
+				 x.previousElementSibling.className =
+				 x.previousElementSibling.className.replace(" w3-green", "");
+		 }
 	}
 
 	function myDropFunc() {
