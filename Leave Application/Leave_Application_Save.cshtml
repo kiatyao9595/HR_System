@@ -10,6 +10,7 @@
   var username_session =  Session["username"];
   var id = Request.Form["id"];
   var approval_reason = Request.Form["approval_reason"];
+  var type_of_leave_sql = "";
 
 
   string submitted_by =username_session == null?"":username_session.ToString();
@@ -17,24 +18,46 @@
   var sql = "";
   Database db = Database.Open("HR_System");
 
+  switch (type_of_leave) {
+      case "Annual Leave":
+        type_of_leave_sql="annual_leave";
+        break;
+      case "Medical Leave":
+        type_of_leave_sql="medical_leave";
+        break;
+      default:
+        break;
+      }
+
+
+
   LeaveFuction leavefunc = new LeaveFuction();
   if(type == "NEW"){
-  if(leavefunc.sufficientLeave(submitted_by,Convert.ToInt32(no_days_applied))){
+  if(leavefunc.sufficientLeave(submitted_by,Convert.ToInt32(no_days_applied),type_of_leave_sql)){
     Response.Write(String.Format("<script>alert('Insufficient leave to request leave from {0} to {1}. Please reapply leave with valid values! ') </script>",leave_from,leave_to));
     Response.Write(String.Format("<script>window.location.assign('Leave_Application_Details.cshtml')</script>"));
-  }else if(leavefunc.pendingApprovalLeave(submitted_by)){
+  }else if(leavefunc.pendingApprovalLeave(submitted_by) && type_of_leave != "Medical Leave"){
     Response.Write(String.Format("<script>alert('Unable to apply leave, you still have leave pending for approval!') </script>"));
     Response.Write(String.Format("<script>window.location.assign('Leave_Application_Details.cshtml')</script>"));
   }
   else{
-    sql = "INSERT INTO tbl_LeaveApplication(leave_applied_from,leave_applied_to,no_days_applied,status,type_of_leave,reason,submitted_by,submitted_date,username_submitted) VALUES (@0,@1,@2,@3,@4,@5,@6,@7,@8)";	db.Execute(sql,leave_from,leave_to,no_days_applied,"Pending Approval",type_of_leave,reason,LoginFunction.getNamebyUsername(submitted_by),currentTimeStamp,submitted_by);
-    Response.Write(String.Format("<script>alert('Successfully request leave from {0} to {1}, Awaiting for Administrator\\'s Approval!') </script>",leave_from,leave_to));
+    if(type_of_leave == "Annual Leave"){
+      sql = "INSERT INTO tbl_LeaveApplication(leave_applied_from,leave_applied_to,no_days_applied,status,type_of_leave,reason,submitted_by,submitted_date,username_submitted) VALUES (@0,@1,@2,@3,@4,@5,@6,@7,@8)";
+      db.Execute(sql,leave_from,leave_to,no_days_applied,"Pending Approval",type_of_leave,reason,LoginFunction.getNamebyUsername(submitted_by),currentTimeStamp,submitted_by);
+      Response.Write(String.Format("<script>alert('Successfully request leave from {0} to {1}, Awaiting for Administrator\\'s Approval!') </script>",leave_from,leave_to));
+    }else if(type_of_leave == "Medical Leave"){
+      sql = "INSERT INTO tbl_LeaveApplication(leave_applied_from,leave_applied_to,no_days_applied,status,type_of_leave,reason,submitted_by,submitted_date,username_submitted) VALUES (@0,@1,@2,@3,@4,@5,@6,@7,@8)";
+      db.Execute(sql,leave_from,leave_to,no_days_applied,"Approved",type_of_leave,reason,LoginFunction.getNamebyUsername(submitted_by),currentTimeStamp,submitted_by);
+      leavefunc.reduceLeave(Convert.ToInt32(id),Convert.ToInt32(no_days_applied),type_of_leave_sql,submitted_by);
+      Response.Write(String.Format("<script>alert('Medical Leave Recorded!') </script>"));
+    }
+
     Response.Write(String.Format("<script>window.location.assign('Leave_Application_Details.cshtml')</script>"));
   }
   }else if (type == "APPROVE"){
     sql = "UPDATE tbl_LeaveApplication SET status = @0, approved_by = @1, approval_date = @2, approval_reason = @3 WHERE ID = @4";
     db.Execute(sql,"Approved",username_session,currentTimeStamp,approval_reason,id);
-    leavefunc.reduceLeave(Convert.ToInt32(id),Convert.ToInt32(no_days_applied));
+    leavefunc.reduceLeave(Convert.ToInt32(id),Convert.ToInt32(no_days_applied),type_of_leave_sql,submitted_by);
     Response.Write(String.Format("<script>alert('Successfully Approved Leave!')</script>"));
     Response.Write(String.Format("<script>window.location.assign('Leave_Application_Search.cshtml')</script>"));
   }else if (type == "REJECT"){

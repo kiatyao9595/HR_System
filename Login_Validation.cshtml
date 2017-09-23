@@ -16,6 +16,7 @@
   }else{
     Session["username"] = username;
     Session["name"] = LoginFunction.getNamebyUsername(username);
+    Session["role"] = LoginFunction.getRoleByUsername(username);
     Response.Write("<script>window.location.assign('home.cshtml')</script>");
     //Response.Write("<script>window.location.assign('/Employee Registration/Employee_Search.cshtml')</script>");
     lf.ResetRetryCount(username);

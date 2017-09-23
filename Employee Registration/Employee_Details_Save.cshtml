@@ -17,6 +17,9 @@
 	var employeeEntitledLeave = Request.Form["employee_entitled_leave"];
 	var old_employeeEntitledLeave = Request.Form["employee_old_entitled_leave"];
 	var employeeNoOfLeaveLeft = Request.Form["employee_no_leave_left"];
+	var employeeMedicalLeave = Request.Form["employee_medical_leave"];
+	var old_employeeMedicalLeave = Request.Form["employee_no_medical_leave_left"];
+	var employeeNoOfMedicalLeaveLeft = Request.Form["employee_no_medical_leave_left"];
 	var currentTimestamp = DateTime.Now;
 
 	employeePassword = lf.MD5Hash(employeePassword);
@@ -27,12 +30,14 @@
 	if(result <= 0){
 	try{
 	if(type == "NEW"){
-	sql = "INSERT INTO tbl_EmployeeInfo(employeeName,created_date,no_of_leave,username,password,role,contact_no,id_no,address_1,address_2,address_3,address_4,updated_by,updated_date,status,no_of_leave_left) VALUES (@0,@1,@2,@3,@4,@5,@6,@7,@8,@9,@10,@11,@12,@13,@14,@15)";	db.Execute(sql,employeeName,currentTimestamp,employeeEntitledLeave,employeeUsername,employeePassword,employeeRole,employeeContactNo,employee_id_no,employeeAddress1,employeeAddress2,employeeAddress3,employeeAddress4,Session["username"],currentTimestamp,"Active",employeeEntitledLeave);
+	sql = "INSERT INTO tbl_EmployeeInfo(employeeName,created_date,no_of_annual_leave,username,password,role,contact_no,id_no,address_1,address_2,address_3,address_4,updated_by,updated_date,status,annual_leave_bal,no_of_medical_leave,medical_leave_bal) VALUES (@0,@1,@2,@3,@4,@5,@6,@7,@8,@9,@10,@11,@12,@13,@14,@15,@16,@17)";	db.Execute(sql,employeeName,currentTimestamp,employeeEntitledLeave,employeeUsername,employeePassword,employeeRole,employeeContactNo,employee_id_no,employeeAddress1,employeeAddress2,employeeAddress3,employeeAddress4,Session["username"],currentTimestamp,"Active",employeeEntitledLeave,employeeMedicalLeave,employeeMedicalLeave);
 	Response.Write(String.Format("<script>alert('Successfully {0} registered') </script>",employeeName));
 	Response.Write(String.Format("<script>window.location.assign('Employee_Search.cshtml')</script>"));
 	}else if(type == "EDIT"){
 		int newNoOfLeaveLeft = (Convert.ToInt32(employeeEntitledLeave) - Convert.ToInt32(old_employeeEntitledLeave)) + Convert.ToInt32(employeeNoOfLeaveLeft);
-		sql = "UPDATE  tbl_EmployeeInfo SET employeeName=@0 , created_date=@1 ,no_of_leave=@2,role=@3,contact_no=@4 ,id_no=@5 ,address_1=@6 ,address_2=@7,address_3=@8 ,address_4=@9,updated_by=@10,updated_date=@11, no_of_leave_left = @13 WHERE ID = @12";	db.Execute(sql,employeeName,currentTimestamp,employeeEntitledLeave,employeeRole,employeeContactNo,employee_id_no,employeeAddress1,employeeAddress2,employeeAddress3,employeeAddress4,Session["username"],currentTimestamp,employeeID,newNoOfLeaveLeft);
+		int newNoOfMedicalLeaveLeft = (Convert.ToInt32(employeeMedicalLeave) - Convert.ToInt32(old_employeeMedicalLeave)) + Convert.ToInt32(employeeNoOfMedicalLeaveLeft);
+		sql = "UPDATE  tbl_EmployeeInfo SET employeeName=@0 , created_date=@1 ,no_of_annual_leave=@2,role=@3,contact_no=@4 ,id_no=@5 ,address_1=@6 ,address_2=@7,address_3=@8 ,address_4=@9,updated_by=@10,updated_date=@11, annual_leave_bal = @13, no_of_medical_leave = @14, medical_leave_bal = @15 WHERE ID = @12";
+		db.Execute(sql,employeeName,currentTimestamp,employeeEntitledLeave,employeeRole,employeeContactNo,employee_id_no,employeeAddress1,employeeAddress2,employeeAddress3,employeeAddress4,Session["username"],currentTimestamp,employeeID,newNoOfLeaveLeft,employeeMedicalLeave,newNoOfMedicalLeaveLeft);
 		Response.Write(String.Format("<script>alert('Successfully {0} updated') </script>",employeeName));
 		Response.Write(String.Format("<script>window.location.assign('Employee_Search.cshtml')</script>"));
 	}else if(type == "DEACTIVATE"){

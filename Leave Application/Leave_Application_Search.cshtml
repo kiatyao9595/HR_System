@@ -1,6 +1,7 @@
 @{
 	@RenderPage("../HeaderFile.cshtml");
 	var form_type = Request.QueryString["form_type"];
+
 	var default_value = "";
 	if(form_type == "APPROVAL"){
 		default_value = "Pending Approval";
@@ -88,7 +89,7 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-12">
-                            <iframe name="Leave_Application_Search_List_Frame" id="Leave_Application_Search_List_Frame" src="Leave_Application_Search_List.cshtml?form_type=@form_type" frameborder="0" scrolling="no" onload='resizeIframe(this);' width="100%"></iframe>
+                            <iframe name="Leave_Application_Search_List_Frame" id="Leave_Application_Search_List_Frame" src="Leave_Application_Search_List.cshtml?form_type=@form_type&default_username=@default_value" frameborder="0" scrolling="no" onload='resizeIframe(this);' width="100%"></iframe>
                         </div>
                     </div>
                 </div>

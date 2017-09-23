@@ -1,6 +1,7 @@
 @{
   var session_username = Session["username"];
   var session_name = Session["name"];
+  var role = Session["role"];
   session_username = session_username == null?"":session_username;
   session_name = session_name == null?"":session_name;
   if(session_username == "" || session_username== null){

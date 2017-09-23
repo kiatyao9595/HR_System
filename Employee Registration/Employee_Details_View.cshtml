@@ -17,7 +17,8 @@
 	var employeeRole = "";
 	var employeeEntitledLeave = "";
 	var employeeAnnualLeaveBal = "";
-
+	var employeeMedicalLeave = "";
+	var employeeMedicalLeaveBal = "";
   if(!String.IsNullOrEmpty(employeeID)){
     sql = "SELECT TOP 1 * FROM tbl_EmployeeInfo WHERE ID = @0";
     employeeResult = db.QuerySingle(sql,employeeID);
@@ -31,8 +32,10 @@
     employeeAddress3 = employeeResult.address_3;
     employeeAddress4 = employeeResult.address_4;
     employeeRole = employeeResult.role;
-    employeeEntitledLeave = employeeResult.no_of_leave.ToString();
-	employeeAnnualLeaveBal = employeeResult.no_of_leave_left.ToString();
+    employeeEntitledLeave = employeeResult.no_of_annual_leave.ToString();
+		employeeAnnualLeaveBal = employeeResult.annual_leave_bal.ToString();
+		employeeMedicalLeave = employeeResult.no_of_medical_leave.ToString();
+		employeeMedicalLeaveBal = employeeResult.medical_leave_bal.ToString();
     }
 }
 <html lang="en">
@@ -182,9 +185,13 @@
 															<select class="form-control" id="employee_role" disabled="disable" name="employee_role" value="@employeeRole">
                                 @{
   															foreach(var r in rolesResult){
-  																<option value=@r.Role>@r.Role</option>
-  																}
+																		if(employeeRole == r.Role){
+																		<option value=@r.Role selected>@r.Role</option>
+																	}else{
+																		<option value=@r.Role>@r.Role</option>
+																	}
   														     }
+																 }
 															</select>
 														</div>
 													</div>
@@ -208,12 +215,40 @@
 											<div class="col-sm-6">
 													<div class="col-sm-4">
 														<div class="form-group">
-															Annual Leave Balance
+															Employee's Medical Leave
+														</div>
+													</div>
+													<div class="col-sm-6">
+														<div class="form-group">
+															<input class="form-control" id="employee_medical_leave" disabled="disable" name="employee_medical_leave" type="number" placeholder="Only Numbers are allowed" type="text" value="@employeeMedicalLeave">
+														</div>
+													</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-6">
+													<div class="col-sm-4">
+														<div class="form-group">
+															Annual Leave <b>Balance</b>
 														</div>
 													</div>
 													<div class="col-sm-6">
 														<div class="form-group">
 															<input class="form-control" id="employee_annual_leave" disabled="disable" name="employee_annual_leave" type="number" type="text" value="@employeeAnnualLeaveBal">
+														</div>
+													</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-6">
+													<div class="col-sm-4">
+														<div class="form-group">
+															Medical Leave <b>Balance</b>
+														</div>
+													</div>
+													<div class="col-sm-6">
+														<div class="form-group">
+															<input class="form-control" id="employee_medical_leave" disabled="disable" name="employee_medical_leave" type="number" type="text" value="@employeeMedicalLeaveBal">
 														</div>
 													</div>
 											</div>

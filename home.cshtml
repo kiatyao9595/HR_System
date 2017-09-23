@@ -23,8 +23,10 @@
 			<a class="w3-button w3-block w3-left-align" onclick="myAccFunc2()">Leave Application <i class="fa fa-caret-down"></i></a>
 			<div class="w3-hide w3-white w3-card-2" id="demoAcc2">
 				<a class="w3-bar-item w3-button" href="/Leave%20Application/Leave_Application_Details.cshtml" target="content_frame">Leave Application</a>
-        <a class="w3-bar-item w3-button" href="/Leave%20Application/Leave_Application_Search.cshtml?form_type=LISTING" target="content_frame">Leave Application Listing</a>
-        <a class="w3-bar-item w3-button" href="/Leave%20Application/Leave_Application_Search.cshtml?form_type=APPROVAL" target="content_frame">Leave Application Approval</a>
+				@if(LoginFunction.isAdmin(Session["role"].ToString())){
+					<a class="w3-bar-item w3-button" href="/Leave%20Application/Leave_Application_Search.cshtml?form_type=LISTING" target="content_frame">Leave Application Listing</a>
+	        <a class="w3-bar-item w3-button" href="/Leave%20Application/Leave_Application_Search.cshtml?form_type=APPROVAL" target="content_frame">Leave Application Approval</a>
+				}
         <a class="w3-bar-item w3-button" href="/Leave%20Application/Leave_Application_Search.cshtml?form_type=OWNER" target="content_frame">My Leave Application</a>
 			</div>
 			<a class="w3-bar-item w3-button" href="expired.cshtml">Sign Out</a>

@@ -49,7 +49,11 @@
                                                 <table class="table table-striped table-bordered table-hover table_font" id="employee_table">
                                                     <thead>
                                                        <tr>
+																												 @if(LoginFunction.isAdmin(Session["role"].ToString())){
 											                                      <th colspan="2">Action</th>
+																													}else{
+																														<th>Action</th>
+																													}
                                                             <th>Employee ID</th>
                                                             <th>Employee Name</th>
                                                             <th>Created Date</th>
@@ -62,8 +66,10 @@
                                                             foreach(var r in result) {
                                                                 <tr>
                                                                     <td><button class="btn btn-primary" onclick="parent.location.href='Employee_Details_View.cshtml?employeeID=@r.id'" target="_parent">View</button></td>
+																																		@if(LoginFunction.isAdmin(Session["role"].ToString())){
                                                                     <td><button class="btn btn-success" onclick="parent.location.href='Employee_Details.cshtml?employeeID=@r.id&form_type=EDIT'">Edit</button></td>
-                                                                    <td>@r.ID</td>
+																																	  }
+																																		<td>@r.ID</td>
                                                                     <td>@r.employeeName</td>
                                                                     <td>@r.created_date</td>
                                                                     <td>@r.status</td>

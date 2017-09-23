@@ -19,6 +19,9 @@
 	var employeeEntitledLeave = 0;
 	var old_employeeEntitledLeave = 0;
 	var employeeNoOfLeaveLeft = 0;
+	var employeeMedicalLeave = 0;
+	var old_employeeMedicalLeave = 0;
+	var employeeNoOfMedicalLeaveLeft = 0;
 	var status = "";
 
 	if(type == "EDIT"){
@@ -33,9 +36,12 @@
 		employeeAddress2 = employeeResult.address_2;
 		employeeAddress3 = employeeResult.address_3;
 		employeeAddress4 = employeeResult.address_4;
-		employeeNoOfLeaveLeft = employeeResult.no_of_leave_left;
-		employeeEntitledLeave = employeeResult.no_of_leave;;
-		old_employeeEntitledLeave = employeeResult.no_of_leave;
+		employeeNoOfLeaveLeft = employeeResult.annual_leave_bal;
+		employeeNoOfMedicalLeaveLeft = employeeResult.medical_leave_bal;
+		employeeEntitledLeave = employeeResult.no_of_annual_leave;
+		employeeMedicalLeave = employeeResult.no_of_medical_leave;
+		old_employeeEntitledLeave = employeeResult.no_of_annual_leave;
+		old_employeeMedicalLeave = employeeResult.no_of_medical_leave;
 		employeeRole = employeeResult.role;
 		status = employeeResult.status;
 		}
@@ -54,6 +60,8 @@
 		<input class="form-control" id="employee_id" name="employee_id" type="hidden" value="@employeeID">
 		<input class="form-control" id="employee_no_leave_left" name="employee_no_leave_left" type="hidden" value="@employeeNoOfLeaveLeft">
 		<input class="form-control" id="employee_old_entitled_leave" name="employee_old_entitled_leave" type="hidden" value="@old_employeeEntitledLeave">
+		<input class="form-control" id="employee_no_medical_leave_left" name="employee_no_medical_leave_left" type="hidden" value="@employeeNoOfMedicalLeaveLeft">
+		<input class="form-control" id="employee_old_mdeical_leave" name="employee_old_mdeical_leave" type="hidden" value="@old_employeeMedicalLeave">
 		<input class="form-control" id="form_type" name="form_type" type="hidden" value="@type">
 		<div id="wrapper">
 			<div id="page-wrapper" style="background-color:#fff; margin: 0px 0px 0px 0px">
@@ -210,11 +218,15 @@
 													<div class="col-sm-6">
 														<div class="form-group">
 															<select class="form-control" id="employee_role" name="employee_role" value = "@employeeRole" required>
-															@{
-															foreach(var r in rolesResult){
-																<option value=@r.Role>@r.Role</option>
-																}
-														     }
+																@{
+  															foreach(var r in rolesResult){
+																if(employeeRole == r.Role){
+																		<option value=@r.Role selected>@r.Role</option>
+																	}else{
+																		<option value=@r.Role>@r.Role</option>
+																	}
+  														     }
+																 }
 															</select>
 														</div>
 													</div>
@@ -230,6 +242,20 @@
 													<div class="col-sm-6">
 														<div class="form-group">
 															<input class="form-control" id="employee_entitled_leave" name="employee_entitled_leave" type="number" placeholder="Only Numbers are allowed" type="text" value = "@employeeEntitledLeave" required>
+														</div>
+													</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-6">
+													<div class="col-sm-4">
+														<div class="form-group">
+															Employee's Entitled Leave
+														</div>
+													</div>
+													<div class="col-sm-6">
+														<div class="form-group">
+															<input class="form-control" id="employee_medical_leave" name="employee_medical_leave" type="number" placeholder="Only Numbers are allowed" type="text" value = "@employeeMedicalLeave" required>
 														</div>
 													</div>
 											</div>
@@ -254,7 +280,6 @@
 		 										}
 											 }
 										</div>
-
 										}
 										}
 										<div class="col-sm-2">

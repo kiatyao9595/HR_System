@@ -52,14 +52,13 @@
 
                                     <div class="row" style="text-align: center">
                                         <div class="col-sm-12">
-                                            <div class="col-sm-4"></div>
-                                            <div class="col-sm-2">
-                                                <button type="submit" class="btn btn-primary">Search</button>
-                                            </div>
-                                            <div class="col-sm-2">
-                                                <button type="button" class="btn btn-success" onclick="location.href = 'Employee_Details.cshtml?form_type=NEW'">Add New Employee</button>
-                                            </div>
-                                        </div>
+                                                <button type="submit" style = "margin: 0px 30px 0px 0px" class="btn btn-primary">Search</button>
+																						@if(LoginFunction.isAdmin(Session["role"].ToString())){
+																								<button type="button" class="btn btn-success" onclick="location.href = 'Employee_Details.cshtml?form_type=NEW'">Add New Employee</button>
+
+																						}
+																				</div>
+
                                     </div>
                                 </div>
                             </div>

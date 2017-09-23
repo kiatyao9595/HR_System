@@ -109,6 +109,19 @@ public class LoginFunction
 		 String result = db.QueryValue(sql,username).ToString();
 		 return result;
 	}
+	public static String getRoleByUsername(String username){
+		 var sql = "SELECT TOP 1 role FROM tbl_employeeInfo WHERE username = @0";
+		 Database db = Database.Open("HR_System");
+		 String result = db.QueryValue(sql,username).ToString();
+		 return result;
+	}
+	public static bool isAdmin(String role){
+		if(role == "Admin"){
+			return true;
+		}else{
+			return false;
+		}
+	}
 
 
 
